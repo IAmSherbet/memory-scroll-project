@@ -1,0 +1,27 @@
+.cardContainer {
+  height: 100vh;
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+}
+
+.card {
+  flex-grow: 1;
+  background-color: rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.videoContainer {
+  width: 100%;
+  max-width: 100%;
+}
+
+.video {
+  width: 100%;
+}
+
+video {
+  max-height: 100vh;
+}

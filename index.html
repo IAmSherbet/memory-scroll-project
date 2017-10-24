@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Play & pause on scroll</title>
+    <link rel="stylesheet" type="text/css" href = "style.css">
+  </head>
+  <body>
+    <div class="cardContainer">
+      <div class="card">
+        <video
+          id="video1"
+          className="video"
+          src="./Video/train.mp4"
+          onclick="printCoords(this.id)"
+        />
+      </div>
+    </div>
+
+    <div class="cardContainer">
+      <div class="card">
+        <video
+          id="video2"
+          className="video"
+          src="./Video/water.mp4"
+          onclick="printCoords(this.id)"
+        ></video>
+      </div>
+    </div>
+
+    <div class="cardContainer">
+      <div class="card">
+        <video
+          id="video3"
+          className="video"
+          src="./Video/phill.mp4"
+          onclick="printCoords(this.id)"
+        ></video>
+      </div>
+    </div>
+
+    <div class="cardContainer">
+      <div class="card">
+        <video
+          id="video4"
+          className="video"
+          src="./Video/sakura.mp4"
+          onclick="printCoords(this.id)"
+        ></video>
+      </div>
+    </div>
+
+    <script>
+      var elemIDs = [
+        'video1',
+        'video2',
+        'video3',
+        'video4',
+      ];
+
+      var elemCenters = elemIDs.map(getCenters)
+      var activeElemID = 'video1';
+
+      window.onload = function() {
+        document.getElementById(activeElemID).play();
+      }
+
+      function getCenters(id) {
+        var el = document.getElementById(id).getBoundingClientRect();
+        var top = (el.top + window.scrollY);
+        var bottom = (el.bottom + window.scrollY);
+        var height = bottom - top;
+        var center = top + height/2;
+
+        return center;
+      }
+
+      window.onscroll = function() {
+        // console.log(window.scrollY);
+
+        var differences = elemCenters.map(getDifferences);
+
+        var correctedDifferences = differences.map(correctDifferences);
+
+        var lowestDifference = Array.min(correctedDifferences);
+
+        // Get the index of the lowestDifference. See here: https://stackoverflow.com/questions/7346827/how-to-find-the-array-index-with-a-value
+
+        var indexOfLowestDiff = correctedDifferences.indexOf(lowestDifference);
+
+        var closestCenter = elemCenters[indexOfLowestDiff];
+        var indexOfClosestCenter = elemCenters.indexOf(closestCenter);
+
+        if (window.scrollY > closestCenter) {
+          activeElemID = elemIDs[indexOfClosestCenter + 1];
+        } else {
+          activeElemID = elemIDs[indexOfClosestCenter];
+        };
+
+        var indexOfActiveElemID = elemIDs.indexOf(activeElemID);
+
+        function getNonActiveElemIDIndexes(elemID) {
+          if (elemIDs.indexOf(elemID) === indexOfActiveElemID) {
+            return null;
+          } else {
+            return elemIDs.indexOf(elemID);
+          }
+        };
+
+        function pauseNonActiveElemIDIndexes(elemID) {
+          if (elemIDs.indexOf(elemID) !== indexOfActiveElemID) {
+            document.getElementById(elemID).pause();
+          }
+        };
+
+        elemIDs.map(pauseNonActiveElemIDIndexes);
+
+        var nonActiveElemIDIndexes = elemIDs.map(getNonActiveElemIDIndexes)
+
+        document.getElementById(activeElemID).play();
+
+        // console.log(correctedDifferences);
+        // console.log(lowestDifference);
+        // console.log(indexOfLowestDiff);
+        // console.log(closestCenter);
+        // console.log(indexOfClosestCenter);
+        console.log(nonActiveElemIDIndexes);
+        console.log(activeElemID);
+      };
+
+      function getDifferences(elemCenter) {
+        diff = elemCenter - window.scrollY;
+        return diff;
+      };
+
+      function correctDifferences(diff) {
+        if (diff < 0) {
+          return diff*-1;
+        } else {
+          return diff;
+        }
+      };
+
+      // Obtains smallest value from an array. See here: https://stackoverflow.com/questions/8934877/obtain-smallest-value-from-array-in-javascript
+
+      Array.min = function (array) {
+        return Math.min.apply( Math, array );
+      };
+
+      function printCoords(element) {
+        var el = document.getElementById(element).getBoundingClientRect();
+        var top = (el.top + window.scrollY);
+        var bottom = (el.bottom + window.scrollY);
+        var height = bottom - top;
+        var center = top + height/2;
+        console.log('top = ' + top);
+        console.log('bottom = ' + bottom);
+        console.log('elem height = ' + height);
+        console.log('elem center = ' + center)
+      }
+    </script>
+  </body>
+</html>
