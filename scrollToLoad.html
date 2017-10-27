@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>test load on scroll</title>
+    <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js?ver=1.3.2'></script>
+    <style>
+      #main-content {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .card {
+        width: 75%;
+        height: 300px;
+        background-color: rgba(0,0,0,0.02);
+        box-shadow: 0px 5px 5px rgba(0,0,0,0.12);
+        padding: 24px;
+        box-sizing: border-box;
+        margin-bottom: 24px;
+      }
+
+      video {
+        max-height: 150px;
+      }
+    </style>
+  </head>
+  <body>
+    <article id="main-content">
+      <div class="card" id="card-1">
+        <video
+          src="./Videos/train.mp4"
+        ></video>
+        <a onclick="printCoords('card-1')">Print Coords</a>
+      </div>
+
+      <div class="card" id="card-2">
+        <video
+          src="./Videos/water.mp4"
+        ></video>
+        <a onclick="printCoords('card-2')">Print Coords</a>
+      </div>
+
+      <div class="card" id="card-3">
+        <video
+          src="./Videos/reading.mp4"
+        ></video>
+        <a onclick="printCoords('card-3')">Print Coords</a>
+      </div>
+
+      <div class="card" id="card-4">
+        <video
+          src="./Videos/river.mp4"
+        ></video>
+        <a onclick="printCoords('card-4')">Print Coords</a>
+      </div>
+    </article>
+
+    <script>
+      var videos = [
+        "./Videos/train.mp4",
+        "./Videos/water.mp4",
+        "./Videos/reading.mp4",
+        "./Videos/river.mp4",
+        "./Videos/sakura.mp4",
+        "./Videos/waves.mp4",
+        "./Videos/monkey.mp4",
+        "./Videos/phill.mp4",
+        "./Videos/smoke.mp4",
+        "./Videos/snow.mp4",
+        "./Videos/air.mp4",
+        "./Videos/arashiyama.mp4",
+      ]
+
+      var card = '<div class="card">new card</div>'
+
+      var videoIndex = 4;
+      var cardIndex = 5;
+
+      var cardId = "card-" + `${cardIndex}`
+
+      $(window).scroll(function() {
+        var videoCard = `<div class="card" id=${cardId}><video src=${videos[videoIndex]}></video><a onclick="printCoords(this)">Print Coords</a></div>`
+
+        if($(window).scrollTop() == $(document).height() - $(window).height()) {
+          if (videoIndex < videos.length - 1) {
+            $("#main-content").append(videoCard);
+            videoIndex++;
+            cardIndex++;
+          } else {
+            console.log('end of the page reached')
+          }
+          console.log(videoIndex);
+          console.log(videos[videoIndex]);
+        }
+      });
+
+      function printCoords(id) {
+        var el = document.getElementById(id).getBoundingClientRect();
+        console.log(el.top + window.scrollY);
+      }
+
+    </script>
+  </body>
+</html>
